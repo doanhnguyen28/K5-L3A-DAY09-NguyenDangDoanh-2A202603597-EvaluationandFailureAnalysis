@@ -1,6 +1,6 @@
 # Failure taxonomy v1
 
-Nguồn bằng chứng: report `E-swarm-20261117-94ff` (baseline), `E-seeded_regression-20261117-94ff`, `lab9.trace_case`, và **probe một lỗi** — chạy `lab9.variant_agent.make_shape(name, {"no_override", <bug>})` trên 14 item @ seed 11, ghi lại item nào fail grader nào. Eval set `94ffbb3fdd7e`.
+Nguồn bằng chứng: report `E-swarm-20261117-91d2` (baseline), `E-seeded_regression-20261117-91d2`, `lab9.trace_case`, và **probe một lỗi** — chạy `lab9.variant_agent.make_shape(name, {"no_override", <bug>})` trên 14 item @ seed 11, ghi lại item nào fail grader nào. Eval set `91d29f716caf`.
 
 | ID | Tên | Định nghĩa (1 câu) | Layer | Bằng chứng (claim@seed / trace) | Grader | Metric |
 |---|---|---|---|---|---|---|

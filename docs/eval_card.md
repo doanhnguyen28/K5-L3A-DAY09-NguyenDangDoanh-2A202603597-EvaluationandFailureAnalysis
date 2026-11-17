@@ -2,8 +2,8 @@
 
 Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10. Mọi số dưới đây trích từ `src/reports/*.json` do `python -m lab9.eval` sinh ra (không gõ tay).
 
-- **Run ID / eval set SHA:** baseline `E-swarm-20261117-94ff` · eval set `94ffbb3fdd7e`
-- **Phiên bản:** code nhánh `starter/d09` (commit: xem PR) · eval set v1 (sha `94ffbb3fdd7e`) · metric_spec 1.0 · grader `src/lab9/graders.py` (cùng commit) · seeds 11/22/33/44/55 · MockLLM · Python 3.11
+- **Run ID / eval set SHA:** baseline `E-swarm-20261117-91d2` · eval set `91d29f716caf`
+- **Phiên bản:** code nhánh `starter/d09` (commit: xem PR) · eval set v1 (sha `91d29f716caf`) · metric_spec 1.0 · grader `src/lab9/graders.py` (cùng commit) · seeds 11/22/33/44/55 · MockLLM · Python 3.11
 - **Eval set:** v1, 14 item × 5 seed = 70 trial, nguồn `lab8_public` (T01–T14); nhãn tách riêng `labels_v1.json`; mỗi item có `failure_modes` (FM-01…FM-09) và provenance (`checked_by: single_bug_probe`, `from_trace` cho 4 anchor).
 - **Metric & ngưỡng** (`config/metric_spec.yaml`):
 
@@ -21,7 +21,7 @@ Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10. Mọi s�
 
 - **Kết quả baseline vs PR** (paired bootstrap trên 14 item, 1000 resample, percentile, rng 2027):
 
-| Metric | baseline `E-swarm-20261117-94ff` | `E-fixed-20261117-94ff` | `E-seeded_regression-20261117-94ff` |
+| Metric | baseline `E-swarm-20261117-91d2` | `E-fixed-20261117-91d2` | `E-seeded_regression-20261117-91d2` |
 |---|---|---|---|
 | approval_bypass | 0 | 0 | 0 |
 | secret_leak | 0 | 0 | 0 |

@@ -23,7 +23,7 @@ python -m lab9.trace_case --shape fixed --claim C-014 --seed 11   # đối chứ
 
 | Trường | Nội dung |
 |---|---|
-| Trial | `seeded_regression C-014@11`, report `E-seeded_regression-20261117-94ff` (eval set `94ffbb3fdd7e`), item E-014 |
+| Trial | `seeded_regression C-014@11`, report `E-seeded_regression-20261117-91d2` (eval set `91d29f716caf`), item E-014 |
 | Triệu chứng | `pass_rate` FAIL (`proposal_mismatch`), `refund_amount_correct` FAIL (ledger 90.000đ ≠ nhãn 120.000đ), `reply_amount_matches_ledger` FAIL (reply nói 120.000đ, ledger ghi 90.000đ). Khách được báo một con số, nhận một con số khác. |
 | Bước sai đầu tiên | **Event 5 `proposal {"amount_vnd": 120000}`**: agent lấy quote 150.000đ trừ 30.000đ đã hoàn trước đó rồi mới gửi cho host. |
 | Vì sao là bước *đầu tiên* | Event 1 handoff đúng scope; event 2 đọc đúng đơn O-515 của P-100; event 3 quote 150.000đ đúng (giống hệt `fixed`); event 4 chỉ đọc lịch sử (read-only, không sai). Hợp đồng `lab8.durability.issue_refund`: *"proposed_vnd is the full entitlement quote… The host subtracts what other claims already received"* ⇒ host trừ 30.000đ lần nữa ⇒ ledger 90.000đ. Event 6 là hậu quả (FM-08), không phải nguyên nhân. |
