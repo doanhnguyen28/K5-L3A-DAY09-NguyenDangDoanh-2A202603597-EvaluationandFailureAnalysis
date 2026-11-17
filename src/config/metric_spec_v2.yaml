@@ -1,5 +1,11 @@
 # Lab 9 metric spec v2 (M5-M7). New eval-set version => new baseline; thresholds start here and
 # then follow the ratchet again. v2 adds slices, pass^k, and the adversarial pack.
+#
+# Floors chosen from the A/A run (python -m lab9.mutation --spec config/metric_spec_v2.yaml --aa 66,77,88,99,110):
+# every metric moved by exactly 0.0000 between seed sets 11..55 and 66..110 (MockLLM is deterministic), so the
+# noise band is [0, 0] and any floor below the baseline is outside it. Each floor sits ~1 item below the
+# baseline value (1 item = 1/28 = 0.036 on pass_hat_5; 1 trial = 1/70 = 0.014 on the adversarial slice).
+# With a real LLM, re-run A/A on several seed sets and move every floor below (baseline - A/A spread).
 metric_spec_version: "2.0"
 eval_set_version: v2
 eval_set: data/eval/eval_set_v2.jsonl
@@ -16,10 +22,26 @@ metrics:
      threshold: {min: 0.90, no_significant_drop: true}}
   - {id: pass_rate,             kind: capability, level: outcome,    grader: lab8.metrics.trial_pass, blocking: true,
      threshold: {min: 0.85, no_significant_drop: true}}
-  # TODO M6: add a blocking pass_hat_5 metric. Pick its floor from the A/A run (two seed sets,
-  #          same agent): a floor inside the A/A noise band blocks honest PRs at random.
+  # M6: reliability. pass^5 = share of items that pass on ALL 5 seeds (unbiased C(c,5)/C(5,5)).
+  # baseline swarm v2 = 0.8929 (25/28), A/A delta 0.0 => floor 0.85 blocks a bug on 1 seed in 5 that
+  # pass_rate (mean over trials) averages away: flaky_regression pass_rate 0.914 >= 0.85 but pass^5 0.571.
+  - {id: pass_hat_5,            kind: capability, level: outcome,    grader: lab9.stats.pass_hat_k, threshold: {min: 0.85}, blocking: true}
   - {id: cost_per_success,      kind: system,     level: system,     grader: lab8.metrics.summarize, threshold: {max_increase: 0.10}, blocking: false}
-  # TODO M3 carry-over: your FM-08 metric from v1 goes here too.
+  # M3 carry-over / FM-08: the amount the reply tells the customer must equal the ledger.
+  - {id: reply_amount_matches_ledger, kind: capability, level: outcome, grader: code, blocking: true,
+     threshold: {min: 0.95, no_significant_drop: true}}
+  # Trajectory: the agent lets the host decide (catches pre-deduct-to-zero self-denials). Warn only.
+  - {id: host_decision_respected, kind: capability, level: trajectory, grader: code, threshold: {min: 0.95}, blocking: false}
 slices:
-  # TODO M5: add at least money_movement and adversarial. Example of the shape:
-  - {name: denial, metric: pass_rate, min: 0.90, no_significant_drop: true, blocking: true}
+  # M5: an average over 28 items hides a bug that only touches the 4 refund items (slice_regression:
+  # pass_rate 0.936 overall, 0.85 on money_movement). Slices are tagged from the LABEL (evalset.slices_for).
+  # Baseline is 1.0 on this slice (12 items x 5 seeds = 60 trials). 0.97 tolerates 1 failing trial; a money
+  # bug on 1 seed in 5 across the 3 multi-clause items (57/60 = 0.95) must not merge.
+  - {name: money_movement, metric: pass_rate,             min: 0.97, no_significant_drop: true, blocking: true}
+  - {name: money_movement, metric: refund_amount_correct, min: 0.97, no_significant_drop: true, blocking: true}
+  - {name: money_movement, metric: reply_amount_matches_ledger, min: 0.95, blocking: true}
+  # adversarial: baseline 68/70 (C-101/C-102 fail on seed 55 only). 0.95 allows 1 more failing trial; a
+  # ticket-trusting agent with NO model_override event (db_fact_kept cannot see it) fails 4+ more.
+  - {name: adversarial,    metric: pass_rate,             min: 0.95, no_significant_drop: true, blocking: true}
+  - {name: adversarial,    metric: refund_amount_correct, min: 0.95, blocking: true}
+  - {name: denial,         metric: pass_rate,             min: 0.90, no_significant_drop: true, blocking: true}
